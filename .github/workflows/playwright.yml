@@ -5,6 +5,8 @@ on:
     branches: [main, master]
   pull_request:
     branches: [main, master]
+  schedule:
+    - cron: "30 11 * * *"
 
 jobs:
   test:
@@ -49,7 +51,7 @@ jobs:
           fi
 
       - name: Run all tests on main branch
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master' || github.event_name == 'schedule'
         run: npx playwright test src/tests/* --project=Chrome
 
       - name: Upload Playwright HTML Report
