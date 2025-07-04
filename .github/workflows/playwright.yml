@@ -1,0 +1,60 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Check formatting with Prettier
+        run: npx prettier --check "**/*.ts"
+
+      - name: Get changed test files
+        id: changes
+        run: |
+          git fetch origin main
+          CHANGED=$(git diff --name-only origin/main...HEAD -- src/tests/* | grep -E '\.test\.ts$|\.spec\.ts$' || true)
+          echo "files=$CHANGED" >> $GITHUB_OUTPUT
+
+      - name: Run only changed tests
+        if: github.ref != 'refs/heads/main' && github.ref != 'refs/heads/master'
+        run: |
+          echo "Changed test files: ${{ steps.changes.outputs.files }}"
+          if [ -n "${{ steps.changes.outputs.files }}" ]; then
+            npx playwright test ${{ steps.changes.outputs.files }} --project=Chrome
+          else
+            echo "No changed test files to run."
+          fi
+
+      - name: Run all tests on main branch
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        run: npx playwright test src/tests/* --project=Chrome
+
+      - name: Upload Playwright HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
