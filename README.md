@@ -1,10 +1,10 @@
 # Web Application Automation Framework
 
-This Project is for developing Automation Framework from scratch and Automate the Test Cases for Web Application.
+This Project is for developing Web Automation Playwright Framework from scratch and Automate the Test Cases for Web Application.
 
 - Tool Used: Playwright
 - Language Used: Typescript
-- IDE Used: JetBrains Aqua
+- IDE Used: JetBrains Webstorm
 - Version Control Used: GitHub
 - CI/CD Used: GitHub
 
@@ -17,16 +17,13 @@ This Project is for developing Automation Framework from scratch and Automate th
 
 ## Installation
 
-1. Download Aqua IDE from the below links.
-
-- **Mac Link:** https://www.jetbrains.com/aqua/download/#section=mac
-- **Windows Link:** https://www.jetbrains.com/aqua/download/#section=windows
+1. Download Webstorm IDE.
 
 2. Clone the repository:
    git clone https://github.com/ARAVINDMS444/web-automation-playwright-typescript.git
 
 3. Navigate to the project directory:
-   cd web-app-automation
+   cd web-automation-playwright-typescript
 
 4. Install Dependencies:
 
