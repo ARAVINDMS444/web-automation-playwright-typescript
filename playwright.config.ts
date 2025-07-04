@@ -15,7 +15,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     trace: "off",
-    headless: false,
+    headless: true,
   },
 
   /* Configure projects for major browsers */
