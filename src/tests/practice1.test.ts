@@ -7,6 +7,9 @@ import {
   test,
 } from "@playwright/test";
 import * as path from "path";
+import { Helpers } from "../utils/helpers";
+import { TestData } from "../utils/testData";
+import { LoginPage } from "../pages/LoginPage";
 
 test.skip("ui test - amazon - search and add product to cart", async ({
   page,
@@ -146,17 +149,10 @@ test("sorting test - swag labs - search product and sort and validate", async ({
     .map((p) => p.replace("$", ""))
     .map(Number);
 
-  function isAscending(sortedPrices: number[]): boolean {
-    for (let i: number = 0; i < sortedPrices.length; i++) {
-      if (sortedPrices[i] > sortedPrices[i + 1]) {
-        return false;
-      }
-    }
-    return true;
-  }
+  const flag: boolean = Helpers.isAscending(sortedPrices);
 
   // Validate the sorted array is in ascending order
-  expect(isAscending(sortedPrices)).toBeTruthy();
+  expect(flag).toBeTruthy();
 });
 
 test.skip("api test", async ({ request }): Promise<void> => {
@@ -297,11 +293,11 @@ test("ui test - tables", async ({ page }): Promise<void> => {
 
 test("ui test - screenshots", async ({ page }): Promise<void> => {
   const pageScreenshotPath: string = path.join(
-    "test-artifacts/screenshots",
+    "src/artifacts/screenshots",
     "pageScreenshot.png",
   );
   const elementScreenshotPath: string = path.join(
-    "test-artifacts/screenshots",
+    "src/artifacts/screenshots",
     "elementScreenshot.png",
   );
   await page.goto("https://practice-automation.com/javascript-delays/");
@@ -319,7 +315,7 @@ test("ui test - screenshots", async ({ page }): Promise<void> => {
 
 test("ui test - uploads", async ({ page }): Promise<void> => {
   await page.goto("https://practice-automation.com/file-upload/");
-  const filePath: any = path.resolve("test-artifacts/uploads/test.pdf");
+  const filePath: any = path.resolve("src/artifacts/uploads/test.pdf");
   await page.locator("(//input[@id='file-upload'])[1]").setInputFiles(filePath);
   await page.waitForTimeout(3000);
   await page.locator("//input[@id='upload-btn']").click();
@@ -335,7 +331,7 @@ test("ui test - uploads", async ({ page }): Promise<void> => {
 test("ui test - downloads", async ({ page }): Promise<void> => {
   await page.goto("https://practice-automation.com/file-download/");
   await page.waitForTimeout(2000);
-  const filePath: any = path.resolve("test-artifacts/downloads");
+  const filePath: any = path.resolve("src/artifacts/downloads");
   const [download] = await Promise.all([
     page.waitForEvent("download"),
     (async (): Promise<void> => {
@@ -441,4 +437,9 @@ test("api test - real scenario with tuple", async ({
     expect(id).toBeGreaterThan(0);
     expect(price).toBeGreaterThan(0);
   }
+});
+
+test("ui test - pom", async ({ page }): Promise<void> => {
+  const loginPage = new LoginPage(page);
+  await loginPage.validLogin(TestData.username, TestData.password);
 });
