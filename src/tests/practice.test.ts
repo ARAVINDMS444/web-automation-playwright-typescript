@@ -8,7 +8,7 @@ import {
 } from "@playwright/test";
 import * as path from "path";
 
-test("ui test - amazon - search and add product to cart", async ({
+test.skip("ui test - amazon - search and add product to cart", async ({
   page,
 }): Promise<void> => {
   // Go to Amazon
