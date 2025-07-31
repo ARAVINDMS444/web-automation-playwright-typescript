@@ -262,6 +262,39 @@ test("ui test - frames", async ({ page }): Promise<void> => {
   await page.waitForTimeout(2000);
 });
 
+test("ui test - ads", async ({ page }): Promise<void> => {
+  await page.goto("https://practice-automation.com/ads/");
+  const ads: Locator = page.locator(
+    "//div[@id='popmake-1272']//button[@aria-label='Close'][normalize-space()='×']",
+  );
+  await ads.waitFor({ state: "visible" });
+  await ads.click();
+  await page.waitForTimeout(2000);
+});
+
+test("ui test - tables", async ({ page }): Promise<void> => {
+  await page.goto("https://practice-automation.com/tables/");
+  await page
+    .locator("(//span[normalize-space()='Population (million)'])[1]")
+    .click();
+  await page.waitForTimeout(2000);
+  const stringPopulation: string[] = await page
+    .locator("(//table[@id='tablepress-1'])[1]/tbody/tr/td[3]")
+    .allTextContents();
+  const numericPopulation: number[] = stringPopulation.map((p) => Number(p));
+
+  function isAscending(numericPopulation: number[]): boolean {
+    for (let i: number = 0; i < numericPopulation.length; i++) {
+      if (numericPopulation[i] > numericPopulation[i + 1]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  expect(isAscending(numericPopulation)).toBeTruthy();
+});
+
 test("ui test - screenshots", async ({ page }): Promise<void> => {
   const pageScreenshotPath: string = path.join(
     "test-artifacts/screenshots",
@@ -350,6 +383,34 @@ test("ui test - broken links", async ({ page, request }): Promise<void> => {
       }
     } catch (e) {
       console.log(`Error getting link: ${e}`);
+    }
+  }
+});
+
+test("ui test - broken images", async ({ page, request }): Promise<void> => {
+  await page.goto("https://practice-automation.com/broken-images/");
+  await page.waitForLoadState("domcontentloaded");
+  const imagesLocator: Locator = page.locator("//img");
+  const count: number = await imagesLocator.count();
+
+  for (let i: number = 0; i < count; i++) {
+    const image: string = await imagesLocator.nth(i).getAttribute("src");
+    const imageUrl: any = image.startsWith("http")
+      ? image
+      : new URL(image, page.url()).href;
+    const response: APIResponse = await request.get(imageUrl);
+    try {
+      if (response.status() == 200) {
+        console.log(
+          `🟢 Valid image: ${image} , Status code: ${response.status()}`,
+        );
+      } else {
+        console.log(
+          `🔴 Broken image: ${image} , Status code: ${response.status()}`,
+        );
+      }
+    } catch (e) {
+      console.log(`Error getting image: ${e}`);
     }
   }
 });
