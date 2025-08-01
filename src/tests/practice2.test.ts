@@ -1,6 +1,7 @@
 import { test } from "../fixtures/fixtures";
 import { DataProviders } from "../utils/dataProviders";
 import { expect, Locator } from "@playwright/test";
+import AxeBuilder from "@axe-core/playwright";
 
 test("ui test - fixtures", async ({ loginPage }): Promise<void> => {
   await loginPage.validLogin("tomsmith", "SuperSecretPassword!");
@@ -36,4 +37,10 @@ DataProviders.invalidLoginData.forEach(({ username, password }): void => {
   }): Promise<void> => {
     await loginPage.invalidLogin(username, password);
   });
+});
+
+test("ui test - accessibility", async ({ page }): Promise<void> => {
+  await page.goto("https://dequeuniversity.com/demo/mars/");
+  const accessibilityScanResults = await new AxeBuilder({ page }).analyze();
+  expect(accessibilityScanResults.violations).not.toEqual([]);
 });
