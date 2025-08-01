@@ -1,9 +1,25 @@
 import { test } from "../fixtures/fixtures";
 import { DataProviders } from "../utils/dataProviders";
-import { Locator } from "@playwright/test";
+import { expect, Locator } from "@playwright/test";
 
 test("ui test - fixtures", async ({ loginPage }): Promise<void> => {
   await loginPage.validLogin("tomsmith", "SuperSecretPassword!");
+});
+
+test("ui test - helpers", async ({ page, helpers }): Promise<void> => {
+  await page.goto("https://practice-automation.com/tables/");
+  await page
+    .locator("(//span[normalize-space()='Population (million)'])[1]")
+    .click();
+  await page.waitForTimeout(2000);
+  const stringPopulation: string[] = await page
+    .locator("(//table[@id='tablepress-1'])[1]/tbody/tr/td[3]")
+    .allTextContents();
+  const numericPopulation: number[] = stringPopulation.map((p) => Number(p));
+
+  const flag: boolean = helpers.isAscending2(numericPopulation);
+
+  expect(flag).toBeTruthy();
 });
 
 test("ui test - actions", async ({ page, actions }): Promise<void> => {

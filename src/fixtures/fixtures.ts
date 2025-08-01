@@ -3,10 +3,12 @@ export { expect } from "@playwright/test";
 import { test as baseTest } from "@playwright/test";
 import { LoginPage } from "../pages/LoginPage";
 import { Actions } from "../utils/actions";
+import { Helpers } from "../utils/helpers";
 
 type PageFixtures = {
   loginPage: LoginPage;
   actions: Actions;
+  helpers: Helpers;
 };
 
 export const test = baseTest.extend<PageFixtures>({
@@ -17,5 +19,9 @@ export const test = baseTest.extend<PageFixtures>({
   actions: async ({ page }, use) => {
     const actions = new Actions(page);
     await use(actions);
+  },
+  helpers: async ({ page }, use) => {
+    const helpers = new Helpers(page);
+    await use(helpers);
   },
 });
