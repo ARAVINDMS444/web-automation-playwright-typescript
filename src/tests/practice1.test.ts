@@ -372,10 +372,6 @@ test("ui test - broken links", async ({ page, request }): Promise<void> => {
         console.log(
           `🔴 Broken link: ${link} , Status code: ${response.status()}`,
         );
-      } else {
-        console.log(
-          `🟢 Valid link: ${link} , Status code: ${response.status()}`,
-        );
       }
     } catch (e) {
       console.log(`Error getting link: ${e}`);
@@ -396,11 +392,7 @@ test("ui test - broken images", async ({ page, request }): Promise<void> => {
       : new URL(image, page.url()).href;
     const response: APIResponse = await request.get(imageUrl);
     try {
-      if (response.status() == 200) {
-        console.log(
-          `🟢 Valid image: ${image} , Status code: ${response.status()}`,
-        );
-      } else {
+      if (response.status() != 200) {
         console.log(
           `🔴 Broken image: ${image} , Status code: ${response.status()}`,
         );
