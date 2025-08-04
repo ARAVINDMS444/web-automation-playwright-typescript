@@ -2,7 +2,7 @@ import { expect, Locator, test } from "@playwright/test";
 import { readdirSync, readFileSync } from "fs";
 import * as path from "node:path";
 
-test("ui test e2e shopping flow: navigate-login-search-addToCart-checkout-payment-downloadInvoice", async ({
+test("ui test e2e shopping flow: navigate -> login -> search -> addToCart -> checkout -> payment -> downloadInvoice", async ({
   page,
 }): Promise<void> => {
   // Step 1: Navigate to application
@@ -39,6 +39,7 @@ test("ui test e2e shopping flow: navigate-login-search-addToCart-checkout-paymen
   await page.locator("(//img[@alt='ecommerce website products'])[1]").hover();
   await page.locator("(//a[contains(text(),'Add to cart')])[1]").click();
   await page.locator("//button[normalize-space()='Continue Shopping']").click();
+  await page.waitForTimeout(2000);
   await page.locator("(//img[@alt='ecommerce website products'])[2]").hover();
   await page.locator("(//a[contains(text(),'Add to cart')])[3]").click();
   await page.locator("//u[normalize-space()='View Cart']").click();
