@@ -24,7 +24,7 @@ test("ui test e2e shopping flow: navigate -> login -> search -> addToCart -> che
   await page.locator("(//input[@id='search_product'])[1]").fill("T-Shirt");
   await page.locator("(//i[@class='fa fa-search'])[1]").click();
 
-  // Step 4: Validate Product list contains items with "T-Shirt" in the name or description
+  // Step 4: A validate Product list contains items with "T-Shirt" in the name or description
   const products: Locator = page.locator("//p[contains(text(),'T-Shirt')]");
   const count: number = await products.count();
   const productsTitle: string[] = [];
@@ -45,7 +45,7 @@ test("ui test e2e shopping flow: navigate -> login -> search -> addToCart -> che
   await page.locator("//u[normalize-space()='View Cart']").click();
   await page.waitForTimeout(2000);
 
-  // Step 6: Validate cart list contains items with "T-Shirt" in the name or description
+  // Step 6: A validate cart list contains items with "T-Shirt" in the name or description
   const cartProducts: Locator = page.locator("//a[contains(text(),'T-Shirt')]");
   const cartCount: number = await cartProducts.count();
   const cartProductsTitle: string[] = [];
@@ -147,6 +147,6 @@ test("ui test e2e shopping flow: navigate -> login -> search -> addToCart -> che
   const match: RegExpMatchArray = content.match(/amount is (\d+)/);
   const totalInvoiceAmount: number = parseInt(match[1]);
 
-  // Step 14: Validate Total prices in the cart and invoice are equal
+  // Step 14: Validate Total prices in the cart and invoice is equal
   expect(cartTotalPrice).toBe(totalInvoiceAmount);
 });
