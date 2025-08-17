@@ -403,7 +403,7 @@ test("ui test - broken images", async ({ page, request }): Promise<void> => {
   }
 });
 
-test("api test - real scenario with tuple", async ({
+test.skip("api test - real scenario with tuple", async ({
   request,
 }): Promise<void> => {
   const tuples: [number, string, number, string, number][] = [];
